@@ -23,7 +23,7 @@
     <v-footer height="auto" fixed>
       <v-card flat tile class="flex">
         <v-card-text class="blue">
-          <strong class="subheading text-md-center">Get connected with us on social networks!</strong>
+          <strong class="subheading text-md-center"></strong>
           <v-spacer></v-spacer>
           <v-btn
             v-for="icon in icons"
