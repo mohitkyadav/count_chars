@@ -8,14 +8,22 @@
         <v-flex xs10 offset-xs1>
           <v-card class="card--flex-toolbar elevation-16">
             <v-toolbar color="grey darken-3" card prominent>
-              <v-toolbar-title class="body-2 grey--text">Paste your text here</v-toolbar-title>
+              <v-toolbar-title class="body-2 grey--text"></v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn icon>
                 <v-icon color="blue darken1">search</v-icon>
               </v-btn>
             </v-toolbar>
             <v-divider></v-divider>
-            <v-card-text style="height:400px;"></v-card-text>
+            <v-card-text style="height:400px;">
+              <v-text-field
+                id="chars-input"
+                name="input-1"
+                label="Paste your chars here"
+                multi-line="true"
+                :counter="10000000000"
+              ></v-text-field>
+            </v-card-text>
           </v-card>
         </v-flex>
       </v-layout>
@@ -36,7 +44,7 @@
           </v-btn>
         </v-card-text>
         <v-card-actions class="grey lighten-2 justify-center">
-          &copy;2018 — <strong>Vuetify</strong>
+          &copy;2018 — <strong>Mohit Kumar Yadav</strong>
         </v-card-actions>
       </v-card>
     </v-footer>
