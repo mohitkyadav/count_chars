@@ -6,21 +6,24 @@
       </v-toolbar>
       <v-layout row pb-2>
         <v-flex xs10 offset-xs1>
-          <v-card class="card--flex-toolbar elevation-16">
+          <v-card class="card--flex-toolbar elevation-16" height="fit-content">
             <v-toolbar color="grey darken-3" card prominent>
               <v-toolbar-title class="body-2 grey--text"></v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn icon>
                 <v-icon color="blue darken1">search</v-icon>
               </v-btn>
+               <v-btn v-on:click="formatCode()">
+                <v-icon color="blue darken1">cached</v-icon>
+              </v-btn>
             </v-toolbar>
             <v-divider></v-divider>
-            <v-card-text style="height:400px;">
+            <v-card-text style="height:max-content;">
               <v-text-field
                 id="chars-input"
                 name="input-1"
                 label="Paste your chars here"
-                multi-line="true"
+                multi-line
                 :counter="10000000000"
               ></v-text-field>
             </v-card-text>
@@ -28,26 +31,6 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-footer height="auto" fixed>
-      <v-card flat tile class="flex">
-        <v-card-text class="blue">
-          <strong class="subheading text-md-center"></strong>
-          <v-spacer></v-spacer>
-          <v-btn
-            v-for="icon in icons"
-            :key="icon"
-            icon
-            dark
-            class="mx-3"
-          >
-            <v-icon size="24px">{{ icon }}</v-icon>
-          </v-btn>
-        </v-card-text>
-        <v-card-actions class="grey lighten-2 justify-center">
-          &copy;2018 — <strong>Mohit Kumar Yadav</strong>
-        </v-card-actions>
-      </v-card>
-    </v-footer>
   </div>
 </template>
 
@@ -73,6 +56,11 @@ export default {
           children: ['Your account', 'Become an Affiliate', 'Shipping Rates', 'Helper']
         }
       ]
+    }
+  },
+  methods: {
+    formatCode: function () {
+      console.log('Hi, You just clicked a button.')
     }
   }
 }

@@ -16,6 +16,7 @@
     "homepage": "https://mohitkyadav.github.io/count_chars"
   },
   "dependencies": {
+    "npm": "^6.1.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuetify": "^1.0.17"
