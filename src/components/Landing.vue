@@ -27,7 +27,7 @@
                 <v-text-field
                   id="chars-input"
                   name="input-1"
-                  label="Paste your chars here"
+                  label="Paste your characters here"
                   multi-line
                   rows="20"
                   :counter="10000000000"
