@@ -45,7 +45,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    new webpack.LoaderOptionsPlugin({ options: {} }),
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
     }),
