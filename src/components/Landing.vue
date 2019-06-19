@@ -4,7 +4,7 @@
 
       <v-toolbar color="blue darken-3">
         <v-toolbar-items>
-          <v-btn v-for="i in counts" :key="i" flat ripple>{{ i.type }} - {{ i.count }}</v-btn>
+          <v-btn v-for="i in counts" :key="i.type" flat ripple>{{ i.type }} - {{ i.count }}</v-btn>
         </v-toolbar-items>
       </v-toolbar>
 
@@ -29,6 +29,8 @@
                   name="input-1"
                   label="Paste your characters here"
                   multi-line
+                  v-model="inputText"
+                  @keyup="formatCode()"
                   rows="20"
                   :counter="10000000000"
                 ></v-text-field>
@@ -50,6 +52,7 @@ export default {
     return {
       imgUrl: 'static/BingWallpaper-2018-05-10.jpg',
       drawer: false,
+      inputText: '',
       counts: [
         {
           'type': 'Vowels',
@@ -73,6 +76,7 @@ export default {
   methods: {
     formatCode: function () {
       console.log('Hi, You just clicked a button.')
+      console.log(this.inputText)
     }
   }
 }
