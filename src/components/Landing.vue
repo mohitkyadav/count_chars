@@ -53,6 +53,7 @@ export default {
       imgUrl: 'static/BingWallpaper-2018-05-10.jpg',
       drawer: false,
       inputText: '',
+      lastStringLen: 0,
       counts: [
         {
           'type': 'Vowels',
@@ -75,8 +76,23 @@ export default {
   },
   methods: {
     formatCode: function () {
-      console.log('Hi, You just clicked a button.')
-      console.log(this.inputText)
+      this.countChars(this.inputText)
+    },
+    reFormatCode: function (startIndex) {
+      console.log(startIndex)
+    },
+    countChars: function (text) {
+      // console.log(startIndex)
+      for (let i = this.lastStringLen; i < text.length; i++) {
+        if (text.charCodeAt(i) === 32) {
+          this.counts[2].count += 1
+        }
+        if (text.length > 0) {
+          this.lastStringLen = text.length
+        } else {
+          this.lastStringLen = 0
+        }
+      }
     }
   }
 }
