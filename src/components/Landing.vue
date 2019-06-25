@@ -51,9 +51,8 @@ export default {
   data () {
     return {
       imgUrl: 'static/BingWallpaper-2018-05-10.jpg',
-      drawer: false,
       inputText: '',
-      lastStringLen: 0,
+      vowASCII: [65, 97, 69, 101, 73, 105, 79, 111, 85, 117],
       counts: [
         {
           'type': 'Vowels',
@@ -70,6 +69,12 @@ export default {
         }, {
           'type': 'Total',
           'count': 0
+        }, {
+          'type': 'Numbers',
+          'count': 0
+        }, {
+          'type': 'Alphabet',
+          'count': 0
         }
       ]
     }
@@ -78,21 +83,44 @@ export default {
     formatCode: function () {
       this.countChars(this.inputText)
     },
-    reFormatCode: function (startIndex) {
-      console.log(startIndex)
-    },
     countChars: function (text) {
-      // console.log(startIndex)
-      for (let i = this.lastStringLen; i < text.length; i++) {
-        if (text.charCodeAt(i) === 32) {
-          this.counts[2].count += 1
-        }
-        if (text.length > 0) {
-          this.lastStringLen = text.length
-        } else {
-          this.lastStringLen = 0
+      this.counts[4].count = text.length
+      let spaceCount = 0
+      let vowCount = 0
+      let conCount = 0
+      let specialCharCount = 0
+      let numCharCount = 0
+      let alphaCount = 0
+      for (let i = 0; i < text.length; i++) {
+        let c = text.charCodeAt(i)
+        if (c === 32) {
+          spaceCount++
+        } else if ((c >= 33 && c <= 47) ||
+          (c >= 58 && c <= 64) ||
+          (c >= 91 && c <= 96) ||
+          (c >= 123 && c <= 126) ||
+          (c >= 128 && c <= 140) ||
+          (c === 142) ||
+          (c >= 145 && c <= 156) ||
+          (c >= 158)) {
+          specialCharCount++
+        } else if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
+          alphaCount++
+          if (this.vowASCII.includes(c)) {
+            vowCount++
+          } else {
+            conCount++
+          }
+        } else if (c >= 48 && c <= 57) {
+          numCharCount++
         }
       }
+      this.counts[0].count = vowCount
+      this.counts[1].count = conCount
+      this.counts[2].count = spaceCount
+      this.counts[3].count = specialCharCount
+      this.counts[5].count = numCharCount
+      this.counts[6].count = alphaCount
     }
   }
 }
