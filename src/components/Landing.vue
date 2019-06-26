@@ -4,9 +4,24 @@
 
       <v-toolbar color="blue darken-3">
         <v-toolbar-items>
-          <v-btn v-for="i in counts" :key="i.type" flat ripple>{{ i.type }} - {{ i.count }}</v-btn>
+          <v-chip v-for="i in counts"  :key="i.type">
+            <v-avatar class="teal">{{ i.count }}</v-avatar>
+            {{ i.type }}
+          </v-chip>
         </v-toolbar-items>
       </v-toolbar>
+
+      <v-snackbar
+        :timeout="2000"
+        :bottom="true"
+        :top="false"
+        :left="false"
+        :right="false"
+        v-model="snackbar"
+      >
+        {{ snackbarText }}
+        <v-btn flat color="green" v-on:click="toggleSnackbar()">Close</v-btn>
+      </v-snackbar>
 
       <v-card my-auto>
         <v-layout row>
@@ -18,8 +33,11 @@
                 <v-btn icon>
                   <v-icon color="blue darken1">search</v-icon>
                 </v-btn>
-                <v-btn icon v-on:click="formatCode()">
-                  <v-icon color="blue darken1">cached</v-icon>
+                <v-btn icon v-on:click="deleteCode()" @click.native="snackbar = true">
+                  <v-tooltip bottom>
+                    <v-icon slot="activator" color="blue darken1">delete</v-icon>
+                    <span>Clean text</span>
+                  </v-tooltip>
                 </v-btn>
               </v-toolbar>
               <v-divider></v-divider>
@@ -52,6 +70,9 @@ export default {
     return {
       imgUrl: 'static/BingWallpaper-2018-05-10.jpg',
       inputText: '',
+      snacksTimeout: 2000,
+      snackbarText: 'Nothing',
+      snackbar: false,
       vowASCII: [65, 97, 69, 101, 73, 105, 79, 111, 85, 117],
       counts: [
         {
@@ -73,14 +94,27 @@ export default {
           'type': 'Numbers',
           'count': 0
         }, {
-          'type': 'Alphabet',
+          'type': 'Alphabets',
           'count': 0
         }
       ]
     }
   },
   methods: {
+    toggleSnackbar: function (snackbarText) {
+      if (snackbarText) {
+        this.snackbarText = snackbarText
+        this.snackbar = !this.snackbar
+      } else {
+        this.snackbar = false
+      }
+    },
     formatCode: function () {
+      this.countChars(this.inputText)
+    },
+    deleteCode: function () {
+      this.inputText = ''
+      this.toggleSnackbar('Text cleared')
       this.countChars(this.inputText)
     },
     countChars: function (text) {
