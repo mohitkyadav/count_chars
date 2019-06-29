@@ -2,61 +2,67 @@
   <div class="landing">
     <div id="main-content">
 
-      <v-toolbar color="blue darken-3">
-        <v-toolbar-items>
-          <v-chip v-for="i in counts"  :key="i.type">
-            <v-avatar class="teal">{{ i.count }}</v-avatar>
-            {{ i.type }}
-          </v-chip>
-        </v-toolbar-items>
-      </v-toolbar>
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md10>
+          <v-toolbar color="blue darken-3">
+            <v-toolbar-items>
+              <v-chip v-for="i in counts"  :key="i.type">
+                <v-avatar class="teal">{{ i.count }}</v-avatar>
+                {{ i.type }}
+              </v-chip>
+            </v-toolbar-items>
+          </v-toolbar>
 
-      <v-snackbar
-        :timeout="2000"
-        :bottom="true"
-        :top="false"
-        :left="false"
-        :right="false"
-        v-model="snackbar"
-      >
-        {{ snackbarText }}
-        <v-btn flat color="green" v-on:click="toggleSnackbar()">Close</v-btn>
-      </v-snackbar>
+          <v-snackbar
+            :timeout="2000"
+            :bottom="true"
+            :top="false"
+            :left="false"
+            :right="false"
+            v-model="snackbar"
+          >
+            {{ snackbarText }}
+            <v-btn flat color="green" v-on:click="toggleSnackbar()">Close</v-btn>
+          </v-snackbar>
 
-      <v-card my-auto>
-        <v-layout row>
-          <v-flex md12 offset-xs0>
-            <v-card class="card--flex-toolbar elevation-16" height="fit-content">
-              <v-toolbar color="darken-3" card prominent>
-                <v-toolbar-title class="body-2 grey--text"></v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon>
-                  <v-icon color="blue darken1">search</v-icon>
-                </v-btn>
-                <v-btn icon v-on:click="deleteCode()" @click.native="snackbar = true">
-                  <v-tooltip bottom>
-                    <v-icon slot="activator" color="blue darken1">delete</v-icon>
-                    <span>Clean text</span>
-                  </v-tooltip>
-                </v-btn>
-              </v-toolbar>
-              <v-divider></v-divider>
-              <v-card-text style="height:max-content;">
-                <v-text-field
-                  id="chars-input"
-                  name="input-1"
-                  label="Paste your characters here"
-                  multi-line
-                  v-model="inputText"
-                  @keyup="formatCode()"
-                  rows="20"
-                  :counter="10000000000"
-                ></v-text-field>
-              </v-card-text>
-            </v-card>
+          <v-card my-auto>
+            <v-layout row>
+              <v-flex md12 offset-xs0>
+                <v-card class="card--flex-toolbar elevation-16" height="fit-content">
+                  <v-toolbar color="darken-3" card prominent>
+                    <v-toolbar-title class="body-2 grey--text"></v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn icon>
+                      <v-icon color="blue darken1">search</v-icon>
+                    </v-btn>
+                    <v-btn icon v-on:click="deleteCode()" @click.native="snackbar = true">
+                      <v-tooltip bottom>
+                        <v-icon slot="activator" color="blue darken1">delete</v-icon>
+                        <span>Clean text</span>
+                      </v-tooltip>
+                    </v-btn>
+                  </v-toolbar>
+                  <v-divider></v-divider>
+                  <v-card-text style="height:max-content;">
+                    <v-text-field
+                      id="chars-input"
+                      name="input-1"
+                      label="Paste your characters here"
+                      multi-line
+                      v-model="inputText"
+                      @keyup="formatCode()"
+                      rows="20"
+                      :counter="10000000000"
+                    ></v-text-field>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </v-card>
           </v-flex>
         </v-layout>
-      </v-card>
+      </v-container>
 
     </div>
 
