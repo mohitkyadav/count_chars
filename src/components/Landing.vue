@@ -7,10 +7,12 @@
           <v-flex xs12 sm8 md10>
           <v-toolbar color="blue darken-3">
             <v-toolbar-items>
-              <v-chip v-for="i in counts"  :key="i.type">
-                <v-avatar class="teal">{{ i.count }}</v-avatar>
-                {{ i.type }}
-              </v-chip>
+              <v-layout align-center="true" justify-center="true">
+                <v-chip color="secondary" small="true" text-color="white" v-for="i in counts"  :key="i.type">
+                  <v-avatar class="teal">{{ i.count }}</v-avatar>
+                  {{ i.type }}
+                </v-chip>
+              </v-layout>
             </v-toolbar-items>
           </v-toolbar>
 
