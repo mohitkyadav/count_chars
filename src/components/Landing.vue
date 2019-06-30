@@ -8,9 +8,13 @@
           <v-toolbar color="blue darken-3">
             <v-toolbar-items>
               <v-layout align-center="true" justify-center="true">
-                <v-chip color="secondary" small="true" text-color="white" v-for="i in counts"  :key="i.type">
+                <v-chip class="elevation-16 uk-animation-slide-left-small" color="secondary" small text-color="white" v-for="i in fitlerZeroCounts()" :key="i.type">
                   <v-avatar class="teal">{{ i.count }}</v-avatar>
                   {{ i.type }}
+                </v-chip>
+                <v-chip class="elevation-3 title uk-animation-slide-right-small" v-if="inputText.length == 0" align-center="true" color="secondary" text-color="white">
+                  Start typing or pasting in the box below
+                  <v-icon right>arrow_downward</v-icon>
                 </v-chip>
               </v-layout>
             </v-toolbar-items>
@@ -45,7 +49,6 @@
                       </v-tooltip>
                     </v-btn>
                   </v-toolbar>
-                  <v-divider></v-divider>
                   <v-card-text style="height:max-content;">
                     <v-text-field
                       id="chars-input"
@@ -104,6 +107,12 @@ export default {
         }, {
           'type': 'Alphabets',
           'count': 0
+        }, {
+          'type': 'lower case',
+          'count': 0
+        }, {
+          'type': 'ALL CAPS',
+          'count': 0
         }
       ]
     }
@@ -116,6 +125,15 @@ export default {
       } else {
         this.snackbar = false
       }
+    },
+    fitlerZeroCounts: function () {
+      let filteredCounts = []
+      for (let i = 0; i < this.counts.length; i++) {
+        if (this.counts[i].count > 0) {
+          filteredCounts.push(this.counts[i])
+        }
+      }
+      return filteredCounts
     },
     formatCode: function () {
       this.countChars(this.inputText)
@@ -130,6 +148,8 @@ export default {
       let spaceCount = 0
       let vowCount = 0
       let conCount = 0
+      let lowCapsCount = 0
+      let allCapsCount = 0
       let specialCharCount = 0
       let numCharCount = 0
       let alphaCount = 0
@@ -153,6 +173,11 @@ export default {
           } else {
             conCount++
           }
+          if (c >= 97 && c <= 122) {
+            lowCapsCount++
+          } else {
+            allCapsCount++
+          }
         } else if (c >= 48 && c <= 57) {
           numCharCount++
         }
@@ -163,6 +188,8 @@ export default {
       this.counts[3].count = specialCharCount
       this.counts[5].count = numCharCount
       this.counts[6].count = alphaCount
+      this.counts[7].count = lowCapsCount
+      this.counts[8].count = allCapsCount
     }
   }
 }
