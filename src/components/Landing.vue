@@ -13,7 +13,7 @@
                   {{ i.type }}
                 </v-chip>
                 <v-chip class="elevation-3 title uk-animation-slide-right-small" v-if="inputText.length == 0" align-center="true" color="secondary" text-color="white">
-                  Start typing or pasting in the box below
+                  Paste or start typing some text in the box below
                   <v-icon right>arrow_downward</v-icon>
                 </v-chip>
               </v-layout>
