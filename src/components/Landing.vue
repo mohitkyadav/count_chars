@@ -12,10 +12,6 @@
                   <v-avatar class="teal">{{ i.count }}</v-avatar>
                   {{ i.type }}
                 </v-chip>
-                <v-chip class="elevation-3 title uk-animation-slide-right-small" v-if="inputText.length == 0" align-center="true" color="secondary" text-color="white">
-                  Paste or start typing some text in the box below
-                  <v-icon right>arrow_downward</v-icon>
-                </v-chip>
               </v-layout>
             </v-toolbar-items>
           </v-toolbar>
@@ -37,7 +33,7 @@
               <v-flex md12 offset-xs0>
                 <v-card class="card--flex-toolbar elevation-16" height="fit-content">
                   <v-toolbar color="darken-3" card prominent>
-                    <v-toolbar-title class="body-2 grey--text"></v-toolbar-title>
+                    <v-toolbar-title class="body-2 grey--text">Paste or start typing text in the box below</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn icon>
                       <v-icon color="blue darken1">search</v-icon>
