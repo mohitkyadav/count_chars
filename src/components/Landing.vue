@@ -124,6 +124,10 @@ export default {
           type: "Upper Case",
           count: 0,
         },
+        {
+          type: "Words",
+          count: "0",
+        },
       ],
     };
   },
@@ -193,6 +197,7 @@ export default {
       this.counts[6].count = alphaCount;
       this.counts[7].count = lowCapsCount;
       this.counts[8].count = allCapsCount;
+      this.counts[9].count = countWords(this.inputText);
     },
   },
 };
@@ -224,6 +229,9 @@ function isLowerCap(c) {
 }
 function isNumber(c) {
   return c >= 48 && c <= 57;
+}
+function countWords(inputText) {
+  return inputText.split(" ").filter((e) => e != "").length;
 }
 </script>
 
