@@ -8,7 +8,7 @@
           <v-toolbar color="blue darken-3">
             <v-toolbar-items>
               <v-layout align-center="true" justify-center="true">
-                <v-chip class="elevation-16 uk-animation-slide-left-small" color="secondary" small text-color="white" v-for="i in fitlerZeroCounts()" :key="i.type">
+                <v-chip class="elevation-16 uk-animation-slide-left-small" color="secondary" small text-color="white" v-for="i in fitlerZeroCounts()" :key="i.type" v-on:click="highlight(i.type)">
                   <v-avatar class="teal">{{ i.count }}</v-avatar>
                   {{ i.type }}
                 </v-chip>
@@ -33,10 +33,10 @@
               <v-flex md12 offset-xs0>
                 <v-card class="card--flex-toolbar elevation-16" height="fit-content">
                   <v-toolbar color="darken-3" card prominent>
-                    <v-toolbar-title class="body-2 grey--text">Paste or start typing text in the box below</v-toolbar-title>
+                    <v-text-field class="body-2 grey--text" id="chars-search" label="Search ..." v-model="search" row="1"></v-text-field>
                     <v-spacer></v-spacer>
                     <v-btn icon>
-                      <v-icon color="blue darken1">search</v-icon>
+                      <v-icon color="blue darken1" @click="highlight('search', search)">search</v-icon>
                     </v-btn>
                     <v-btn icon v-on:click="deleteCode()" @click.native="snackbar = true">
                       <v-tooltip bottom>
@@ -46,15 +46,18 @@
                     </v-btn>
                   </v-toolbar>
                   <v-card-text style="height:max-content;">
+                    <pre id= "chars-disp" v-if="viewMode" @click="enterEdit()" v-html="highlightedText">
+                    </pre>
                     <v-text-field
                       id="chars-input"
                       name="input-1"
-                      label="Paste your characters here"
+                      label="Paste or type your characters here"
                       multi-line
                       v-model="inputText"
-                      @keyup="formatCode()"
+                      @input="formatCode()"
                       rows="20"
                       :counter="10000000000"
+                      v-else
                     ></v-text-field>
                   </v-card-text>
                 </v-card>
@@ -71,12 +74,17 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   name: 'Landing',
   data () {
     return {
       imgUrl: 'static/BingWallpaper-2018-05-10.jpg',
+      prevViewMode: "",
+      viewMode: false,
+      search: "",
       inputText: '',
+			highlightedText: '',
       snacksTimeout: 2000,
       snackbarText: 'Nothing',
       snackbar: false,
@@ -114,6 +122,13 @@ export default {
     }
   },
   methods: {
+		enterView: function(){
+      this.viewMode = true
+    },
+    enterEdit: function(){
+      this.viewMode = false
+      this.prevViewMode = ""
+    },
     toggleSnackbar: function (snackbarText) {
       if (snackbarText) {
         this.snackbarText = snackbarText
@@ -186,6 +201,29 @@ export default {
       this.counts[6].count = alphaCount
       this.counts[7].count = lowCapsCount
       this.counts[8].count = allCapsCount
+      },
+      highlight: function(type, word){
+      let regex = {
+          "Vowels": /([aeiou])/gi,
+          "Consonents": /([^aeiou])/gi,
+          "Alphabets": /([a-z])/gi,
+          "Numbers": /([\d]+)/gi,
+          "lower case": /[a-z]/g,
+          "ALL CAPS": /[A-Z]/g
+      }
+      if(regex.hasOwnProperty(type) && this.prevViewMode !== type){
+          this.prevViewMode = type
+          this.enterView()
+          this.highlightedText = this.inputText.replace(regex[type], function(x){
+            return "<span class= 'h'>"+x+"</span>"
+          })
+      } else if(type === "search" && this.prevViewMode !== word){
+          this.prevViewMode = word
+          this.enterView()
+          this.highlightedText = this.inputText.replace(word, function(x){
+            return "<span class= 'h'>"+x+"</span>"
+          })
+      }
     }
   }
 }
@@ -196,5 +234,26 @@ export default {
 #main-content {
   min-height: 100vh;
   flex-direction: column;
+}
+#chars-disp {
+  display:block;
+  width:100%;
+  max-height:50vh;
+  overflow-y:scroll;
+  text-align:left;
+  font-family: sans-serif;
+  font-size:16px;
+  font-weight:normal;
+  color:white;
+  border:0;
+  outline:0;
+  background-color: transparent;
+}
+</style>
+<style>
+/* style for the highlighted text */
+#chars-disp .h {
+  display:inline-block;
+  color:yellow;
 }
 </style>
