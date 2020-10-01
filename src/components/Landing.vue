@@ -86,7 +86,7 @@ export default {
           'type': 'Vowels',
           'count': 0
         }, {
-          'type': 'Consonents',
+          'type': 'Consonants',
           'count': 0
         }, {
           'type': 'Spaces',
@@ -107,7 +107,7 @@ export default {
           'type': 'lower case',
           'count': 0
         }, {
-          'type': 'ALL CAPS',
+          'type': 'Uppercase',
           'count': 0
         }
       ]
