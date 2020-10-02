@@ -31,7 +31,7 @@
 
             <v-card>
                 <v-card-text elevation=2>
-                    <v-text-field id="chars-input" name="input-1" label="Paste your characters here" color="white" multi-line v-model="inputText" @keyup="formatCode()" rows="20" :counter="10000000000" />
+                    <v-text-field id="chars-input" name="input-1" label="Paste your characters here" color="white" multi-line v-model="inputText" rows="20" :counter="10000000000" />
                 </v-card-text>
             </v-card>
         </v-flex>
@@ -44,9 +44,7 @@ export default {
   name: 'Landing',
   data () {
     return {
-      imgUrl: 'static/BingWallpaper-2018-05-10.jpg',
       inputText: '',
-      snacksTimeout: 2000,
       snackbarText: 'Nothing',
       snackbar: false,
       vowASCII: [65, 97, 69, 101, 73, 105, 79, 111, 85, 117],
@@ -102,16 +100,14 @@ export default {
       }
       return filteredCounts
     },
-    formatCode: function () {
-      this.countChars(this.inputText)
-    },
     deleteCode: function () {
       this.inputText = ''
       this.toggleSnackbar('Text cleared')
-      this.countChars(this.inputText)
-    },
-    countChars: function (text) {
-      this.counts[4].count = text.length
+    }
+  },
+  watch: {
+    'inputText' () {
+      this.counts[4].count = this.inputText.length
       let spaceCount = 0
       let vowCount = 0
       let conCount = 0
@@ -120,8 +116,8 @@ export default {
       let specialCharCount = 0
       let numCharCount = 0
       let alphaCount = 0
-      for (let i = 0; i < text.length; i++) {
-        let c = text.charCodeAt(i)
+      for (let i = 0; i < this.inputText.length; i++) {
+        let c = this.inputText.charCodeAt(i)
         if (c === 32) {
           spaceCount++
         } else if ((c >= 33 && c <= 47) ||
