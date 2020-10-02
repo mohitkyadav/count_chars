@@ -13,6 +13,18 @@
                 <span>Clear text</span>
             </v-tooltip>
         </v-btn>
+        <v-btn fab color="indigo" @click="undo()" :disabled="undoStack <= 0">
+            <v-tooltip bottom>
+                <v-icon slot="activator">undo</v-icon>
+                <span>Undo (ctrl+y)</span>
+            </v-tooltip>
+        </v-btn>
+        <v-btn fab color="indigo" @click="redo()" :disabled="redoStack <= 0">
+            <v-tooltip bottom>
+                <v-icon slot="activator">redo</v-icon>
+                <span>Redo (ctrl+z)</span>
+            </v-tooltip>
+        </v-btn>
     </v-container>
 
     <v-container fluid fill-height>
@@ -44,9 +56,17 @@ export default {
   name: 'Landing',
   data () {
     return {
+      undoStack: [],
+      redoStack: [],
       inputText: '',
       snackbarText: 'Nothing',
       snackbar: false,
+
+      /**
+             * stackBuffer represents the number of chars
+             * typed before storing inputText in the undoStack
+             */
+      stackBuffer: 5,
       vowASCII: [65, 97, 69, 101, 73, 105, 79, 111, 85, 117],
       counts: [{
         'type': 'Vowels',
@@ -103,10 +123,49 @@ export default {
     deleteCode: function () {
       this.inputText = ''
       this.toggleSnackbar('Text cleared')
+    },
+    undo: function () {
+      this.redoStack.push(this.inputText)
+      this.undoStack.pop()
+      this.inputText = this.undoStack.pop()
+    },
+    redo: function () {
+      if (this.redoStack.length > 0) { this.inputText = this.redoStack.pop() }
+    },
+    shouldPushToUndo: function () {
+      if (this.largeAddition()) {
+        this.undoStack.push(this.inputText)
+      }
+    },
+    /**
+         * largeAddition determins if changes too input
+         * text qualify as a large enough addition to
+         * store changes in the undoStack.
+         *
+         * There are three conditions, only one must be met:
+         *
+         * 1: Was inputText previously empty, if so,
+         * store the first change in the undo stack
+         *
+         * 2 & 3: Is inputText larger/smaller by 'stackBuffer'
+         * characters, this ensures undo stages are stored
+         * as chunks of characters changes rather than single
+         * characterchanges
+         */
+    largeAddition: function () {
+      let previousInput = this.undoStack.pop()
+      this.undoStack.push(previousInput)
+      if (previousInput) {
+        if (this.inputText.length > previousInput.length + 5 || this.inputText.length < previousInput.length - 5) { return true }
+        return false
+      }
+      return true
     }
   },
   watch: {
     'inputText' () {
+      if (!this.inputText) return
+      this.shouldPushToUndo()
       this.counts[4].count = this.inputText.length
       let spaceCount = 0
       let vowCount = 0
