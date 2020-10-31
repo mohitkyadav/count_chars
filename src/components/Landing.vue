@@ -1,73 +1,54 @@
 <template>
-  <div class="landing">
-    <div id="main-content">
+<div>
+    <v-container>
+        <v-btn fab color="indigo">
+            <v-tooltip bottom>
+                <v-icon slot="activator">search</v-icon>
+                <span>Search</span>
+            </v-tooltip>
+        </v-btn>
+        <v-btn fab color="indigo" @click="deleteCode()" :disabled="disabled()" @click.native="snackbar = true">
+            <v-tooltip bottom>
+                <v-icon slot="activator">delete</v-icon>
+                <span>Clear text</span>
+            </v-tooltip>
+        </v-btn>
+        <v-btn fab color="indigo" @click="undo()" :disabled="undoStack <= 0">
+            <v-tooltip bottom>
+                <v-icon slot="activator">undo</v-icon>
+                <span>Undo (ctrl+y)</span>
+            </v-tooltip>
+        </v-btn>
+        <v-btn fab color="indigo" @click="redo()" :disabled="redoStack <= 0">
+            <v-tooltip bottom>
+                <v-icon slot="activator">redo</v-icon>
+                <span>Redo (ctrl+z)</span>
+            </v-tooltip>
+        </v-btn>
+    </v-container>
 
-      <v-container fluid fill-height>
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md10>
-          <v-toolbar color="blue darken-3">
-            <v-toolbar-items>
-              <v-layout align-center="true" justify-center="true">
-                <v-chip class="elevation-16 uk-animation-slide-left-small" color="secondary" small text-color="white" v-for="i in fitlerZeroCounts()" :key="i.type">
-                  <v-avatar class="teal">{{ i.count }}</v-avatar>
-                  {{ i.type }}
+    <v-container fluid fill-height>
+        <v-flex>
+            <v-container>
+                <v-chip class="elevation-16 uk-animation-slide-left-small ma-2" color="secondary" small text-color="white" v-for="i in fitlerZeroCounts()" :key="i.type">
+                    <v-avatar class="indigo">{{ i.count }}</v-avatar>
+                    {{ i.type }}
                 </v-chip>
-              </v-layout>
-            </v-toolbar-items>
-          </v-toolbar>
+            </v-container>
 
-          <v-snackbar
-            :timeout="2000"
-            :bottom="true"
-            :top="false"
-            :left="false"
-            :right="false"
-            v-model="snackbar"
-          >
-            {{ snackbarText }}
-            <v-btn flat color="green" v-on:click="toggleSnackbar()">Close</v-btn>
-          </v-snackbar>
+            <v-snackbar :timeout="2000" :bottom="true" :top="false" :left="false" :right="false" v-model="snackbar">
+                {{ snackbarText }}
+                <v-btn flat color="white" v-on:click="toggleSnackbar()">Close</v-btn>
+            </v-snackbar>
 
-          <v-card my-auto>
-            <v-layout row>
-              <v-flex md12 offset-xs0>
-                <v-card class="card--flex-toolbar elevation-16" height="fit-content">
-                  <v-toolbar color="darken-3" card prominent>
-                    <v-toolbar-title class="body-2 grey--text">Paste or start typing text in the box below</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn icon>
-                      <v-icon color="blue darken1">search</v-icon>
-                    </v-btn>
-                    <v-btn icon v-on:click="deleteCode()" @click.native="snackbar = true">
-                      <v-tooltip bottom>
-                        <v-icon slot="activator" color="blue darken1">delete</v-icon>
-                        <span>Clean text</span>
-                      </v-tooltip>
-                    </v-btn>
-                  </v-toolbar>
-                  <v-card-text style="height:max-content;">
-                    <v-text-field
-                      id="chars-input"
-                      name="input-1"
-                      label="Paste your characters here"
-                      multi-line
-                      v-model="inputText"
-                      @keyup="formatCode()"
-                      rows="20"
-                      :counter="10000000000"
-                    ></v-text-field>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
-            </v-layout>
-          </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
-
-    </div>
-
-  </div>
+            <v-card>
+                <v-card-text elevation=2>
+                    <v-text-field id="chars-input" name="input-1" label="Paste your characters here" color="white" multi-line v-model="inputText" rows="20" :counter="10000000000" />
+                </v-card-text>
+            </v-card>
+        </v-flex>
+    </v-container>
+</div>
 </template>
 
 <script>
@@ -75,42 +56,46 @@ export default {
   name: 'Landing',
   data () {
     return {
-      imgUrl: 'static/BingWallpaper-2018-05-10.jpg',
+      undoStack: [],
+      redoStack: [],
       inputText: '',
-      snacksTimeout: 2000,
       snackbarText: 'Nothing',
       snackbar: false,
+
+      /**
+             * stackBuffer represents the number of chars
+             * typed before storing inputText in the undoStack
+             */
+      stackBuffer: 5,
       vowASCII: [65, 97, 69, 101, 73, 105, 79, 111, 85, 117],
-      counts: [
-        {
-          'type': 'Vowels',
-          'count': 0
-        }, {
-          'type': 'Consonants',
-          'count': 0
-        }, {
-          'type': 'Spaces',
-          'count': 0
-        }, {
-          'type': 'Special Chars',
-          'count': 0
-        }, {
-          'type': 'Total',
-          'count': 0
-        }, {
-          'type': 'Numbers',
-          'count': 0
-        }, {
-          'type': 'Alphabets',
-          'count': 0
-        }, {
-          'type': 'lower case',
-          'count': 0
-        }, {
-          'type': 'Uppercase',
-          'count': 0
-        }
-      ]
+      counts: [{
+        'type': 'Vowels',
+        'count': 0
+      }, {
+        'type': 'Consonents',
+        'count': 0
+      }, {
+        'type': 'Spaces',
+        'count': 0
+      }, {
+        'type': 'Special Chars',
+        'count': 0
+      }, {
+        'type': 'Total',
+        'count': 0
+      }, {
+        'type': 'Numbers',
+        'count': 0
+      }, {
+        'type': 'Alphabets',
+        'count': 0
+      }, {
+        'type': 'lower case',
+        'count': 0
+      }, {
+        'type': 'ALL CAPS',
+        'count': 0
+      }]
     }
   },
   methods: {
@@ -122,6 +107,10 @@ export default {
         this.snackbar = false
       }
     },
+    disabled: function () {
+      if (this.inputText === '') return true
+      return false
+    },
     fitlerZeroCounts: function () {
       let filteredCounts = []
       for (let i = 0; i < this.counts.length; i++) {
@@ -131,16 +120,53 @@ export default {
       }
       return filteredCounts
     },
-    formatCode: function () {
-      this.countChars(this.inputText)
-    },
     deleteCode: function () {
       this.inputText = ''
       this.toggleSnackbar('Text cleared')
-      this.countChars(this.inputText)
     },
-    countChars: function (text) {
-      this.counts[4].count = text.length
+    undo: function () {
+      this.redoStack.push(this.inputText)
+      this.undoStack.pop()
+      this.inputText = this.undoStack.pop()
+    },
+    redo: function () {
+      if (this.redoStack.length > 0) { this.inputText = this.redoStack.pop() }
+    },
+    shouldPushToUndo: function () {
+      if (this.largeAddition()) {
+        this.undoStack.push(this.inputText)
+      }
+    },
+    /**
+         * largeAddition determins if changes too input
+         * text qualify as a large enough addition to
+         * store changes in the undoStack.
+         *
+         * There are three conditions, only one must be met:
+         *
+         * 1: Was inputText previously empty, if so,
+         * store the first change in the undo stack
+         *
+         * 2 & 3: Is inputText larger/smaller by 'stackBuffer'
+         * characters, this ensures undo stages are stored
+         * as chunks of characters changes rather than single
+         * characterchanges
+         */
+    largeAddition: function () {
+      let previousInput = this.undoStack.pop()
+      this.undoStack.push(previousInput)
+      if (previousInput) {
+        if (this.inputText.length > previousInput.length + 5 || this.inputText.length < previousInput.length - 5) { return true }
+        return false
+      }
+      return true
+    }
+  },
+  watch: {
+    'inputText' () {
+      if (!this.inputText) return
+      this.shouldPushToUndo()
+      this.counts[4].count = this.inputText.length
       let spaceCount = 0
       let vowCount = 0
       let conCount = 0
@@ -149,18 +175,18 @@ export default {
       let specialCharCount = 0
       let numCharCount = 0
       let alphaCount = 0
-      for (let i = 0; i < text.length; i++) {
-        let c = text.charCodeAt(i)
+      for (let i = 0; i < this.inputText.length; i++) {
+        let c = this.inputText.charCodeAt(i)
         if (c === 32) {
           spaceCount++
         } else if ((c >= 33 && c <= 47) ||
-          (c >= 58 && c <= 64) ||
-          (c >= 91 && c <= 96) ||
-          (c >= 123 && c <= 126) ||
-          (c >= 128 && c <= 140) ||
-          (c === 142) ||
-          (c >= 145 && c <= 156) ||
-          (c >= 158)) {
+                    (c >= 58 && c <= 64) ||
+                    (c >= 91 && c <= 96) ||
+                    (c >= 123 && c <= 126) ||
+                    (c >= 128 && c <= 140) ||
+                    (c === 142) ||
+                    (c >= 145 && c <= 156) ||
+                    (c >= 158)) {
           specialCharCount++
         } else if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
           alphaCount++
@@ -190,11 +216,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-#main-content {
-  min-height: 100vh;
-  flex-direction: column;
-}
-</style>
